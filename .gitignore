@@ -1,0 +1,12 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore specific file types
+*.dll
+*.json
+*.cache
+*.runtimeconfig.json
+
+# Ignore runtime directories
+runtimes/

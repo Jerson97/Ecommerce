@@ -9,5 +9,6 @@ public class Review : BaseDomainModel{
     public int Rating { get; set; }   
     [Column(TypeName = "NVARCHAR(4000)")]
     public string? Comment { get; set; }  
-    public int ProductId  { get; set; }        
+    public int ProductId  { get; set; }     
+    public Product? Product { get; set; }   
 }
