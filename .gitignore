@@ -10,3 +10,7 @@ obj/
 
 # Ignore runtime directories
 runtimes/
+
+# Ignorar archivos de configuración de Visual Studio
+.vs/
+
