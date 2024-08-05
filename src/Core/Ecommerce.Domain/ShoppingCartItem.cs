@@ -1,17 +1,19 @@
 using Ecommerce.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ecommerce.Domain;
 
 public class ShoppingCartItem : BaseDomainModel{
 
     public string? Product { get; set; }
+    [Column(TypeName = "decimal(10,2)")]
     public decimal Price { get; set; }
     public int Quantity  { get; set; }
-    public decimal Image { get; set; }
-    public decimal Category { get; set; }
+    public string? Image { get; set; }
+    public string? Category { get; set; }
     public Guid? ShoppingCartMasterId { get; set; }
     public int ShoppingCartId { get; set; }
+    public virtual ShoppingCart? ShoppingCart { get; set; }
     public int ProductId { get; set; }
     public int Stock { get; set; }
-    public ShoppingCart? ShoppingCart { get; set; }
 }

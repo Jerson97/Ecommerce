@@ -1,4 +1,3 @@
-using Ecommerce.Infrastructure;
 using Ecommerce.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,18 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureService(builder.Configuration);
 
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
     b => b.MigrationsAssembly(typeof(EcommerceDbContext).Assembly.FullName)
-    ));
+    )
+);
 
+// Add services to the container.
 
-// Agregar servicios al contenedor.
 builder.Services.AddControllers(opt =>
 {
-    //agregamos seguridad a todos los endpoint 
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     opt.Filters.Add(new AuthorizeFilter(policy));
 });
+
 
 IdentityBuilder identityBuilder = builder.Services.AddIdentityCore<User>();
 identityBuilder = new IdentityBuilder(identityBuilder.UserType, identityBuilder.Services);
@@ -34,9 +34,12 @@ identityBuilder = new IdentityBuilder(identityBuilder.UserType, identityBuilder.
 identityBuilder.AddRoles<IdentityRole>().AddDefaultTokenProviders();
 identityBuilder.AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User, IdentityRole>>();
 
+identityBuilder.AddEntityFrameworkStores<EcommerceDbContext>();
+identityBuilder.AddSignInManager<SignInManager<User>>();
+
 builder.Services.TryAddSingleton<ISystemClock, SystemClock>();
 
-//configuracion token
+
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(opt =>
@@ -62,12 +65,14 @@ builder.Services.AddCors(options =>
 
 
 
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configurar el pipeline de solicitud HTTP.
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -75,10 +80,39 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("CorsPolicy");
 
 app.MapControllers();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var service = scope.ServiceProvider;
+    var loggerFactory = service.GetRequiredService<ILoggerFactory>();
+
+    try
+    {
+        var context = service.GetRequiredService<EcommerceDbContext>();
+        var usuarioManager = service.GetRequiredService<UserManager<User>>();
+        var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+        await context.Database.MigrateAsync();
+        await EcommerceDbContextData.LoadDataAsync(context, usuarioManager, roleManager, loggerFactory);
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "Error en la migration");
+    }
+}
+
+
+
+
+
+
+
 
 app.Run();

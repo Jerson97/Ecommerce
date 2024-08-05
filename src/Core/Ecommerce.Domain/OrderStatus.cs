@@ -7,6 +7,8 @@ public enum OrderStatus {
     Pending,
     [EnumMember(Value = "El pago fue recibido")]
     Completed,
+    [EnumMember(Value = "El producto fue enviado")]
+    Sent,
     [EnumMember(Value = "El pago tuvo errores")]
     Error
 }

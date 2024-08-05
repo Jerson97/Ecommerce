@@ -13,6 +13,7 @@ public class Order : BaseDomainModel{
         string buyerEmail,
         OrderAddres orderAddress,
         decimal subtotal,
+        decimal total,
         decimal tax,
         decimal shippingPrice)
     {
@@ -20,6 +21,7 @@ public class Order : BaseDomainModel{
         BuyerUsername = buyerEmail;
         OrderAddres = orderAddress;
         Subtotal = subtotal;
+        Total = total;
         Tax = tax;
         ShippingPrice = shippingPrice;
     }

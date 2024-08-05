@@ -71,6 +71,7 @@ public class EcommerceDbContext : IdentityDbContext<User>{
         builder.Entity<User>().Property(x => x.Id).HasMaxLength(36);
         builder.Entity<User>().Property(x => x.NormalizedUserName).HasMaxLength(90);
         builder.Entity<IdentityRole>().Property(x => x.Id).HasMaxLength(36);
+        builder.Entity<IdentityRole>().Property(x => x.NormalizedName).HasMaxLength(90);
     }
 
     public DbSet<Product>? Products {get;set;}

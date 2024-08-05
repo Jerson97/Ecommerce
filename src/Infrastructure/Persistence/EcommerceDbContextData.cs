@@ -26,10 +26,11 @@ namespace Ecommerce.Infrastructure.Persistence
                         LastName = "Ramirez",
                         Email = "jersonramsoto@gmail.com",
                         UserName = "jerson.rs",
-                        PhoneNumber = "960315728",
+                        Phone = "960315728",
                         AvatarUrl = "https://www.lavanguardia.com/andro4all/hero/2023/04/6d8841b6-9d24-457a-95c5-0d3de1d7bf5f.png?width=768&aspect_ratio=16:9&format=nowebp"
                     };
-                    await usuarioManager.CreateAsync(usuarioAdmin, "jerson123456789$");
+                    await usuarioManager.CreateAsync(usuarioAdmin, "Jerson123456789$");
+
                     await usuarioManager.AddToRoleAsync(usuarioAdmin, Role.ADMIN);
 
                     var usuario = new User
@@ -38,10 +39,10 @@ namespace Ecommerce.Infrastructure.Persistence
                         LastName = "Soto",
                         Email = "luisoto@gmail.com",
                         UserName = "luis.rs",
-                        PhoneNumber = "960212328",
+                        Phone = "960212328",
                         AvatarUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTexyst2oQDHyHz9RlXtuIS6Hok2qtndKfCH1QtYw0sJ3KluyvnA_nqeC8ci1PJDOu3Ct4&usqp=CAU"
                     };
-                    await usuarioManager.CreateAsync(usuario, "luis123456789$");
+                    await usuarioManager.CreateAsync(usuario, "Luis123456789$");
                     await usuarioManager.AddToRoleAsync(usuario, Role.USER);
                 }
 

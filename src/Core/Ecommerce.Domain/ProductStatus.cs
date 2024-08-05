@@ -5,6 +5,6 @@ namespace Ecommerce.Domain;
 public enum ProductStatus {
     [EnumMember(Value = "Producto Inactivo")]
     Inactivo, 
-    [EnumMember(Value = "Producto Inactivo")]
+    [EnumMember(Value = "Producto Activo")]
     Activo
 }
