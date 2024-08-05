@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce.Persistence;
+namespace Ecommerce.Infrastructure.Persistence;
 
 public class EcommerceDbContext : IdentityDbContext<User>{
 
@@ -73,13 +73,13 @@ public class EcommerceDbContext : IdentityDbContext<User>{
         builder.Entity<IdentityRole>().Property(x => x.Id).HasMaxLength(36);
     }
 
-    public DbSet<Product>? products {get;set;}
+    public DbSet<Product>? Products {get;set;}
     public DbSet<Category>? Categories {get;set;}
     public DbSet<Image>? Images {get;set;}
     public DbSet<Address>? Addresses {get;set;}
     public DbSet<Order>? Orders {get;set;}
     public DbSet<OrderItem>? OrderItems {get;set;}
-    public DbSet<Review>? reviews {get;set;}
+    public DbSet<Review>? Reviews {get;set;}
     public DbSet<ShoppingCart>? ShoppingCarts {get;set;}
     public DbSet<ShoppingCartItem>? ShoppingCartItems {get;set;}
     public DbSet<Country>? Countries {get;set;}

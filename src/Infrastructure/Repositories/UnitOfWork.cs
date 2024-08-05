@@ -1,5 +1,5 @@
 ﻿using Ecommerce.Application.Persistence;
-using Ecommerce.Persistence;
+using Ecommerce.Infrastructure.Persistence;
 using System.Collections;
 
 namespace Ecommerce.Infrastructure.Repositories

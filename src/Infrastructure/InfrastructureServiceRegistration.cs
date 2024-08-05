@@ -3,9 +3,8 @@ using Ecommerce.Application.Persistence;
 using Ecommerce.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.CompilerServices;
 
-namespace Ecommerce.Infrastructure
+namespace Ecommerce.Infrastructure.Persistence
 {
     public static class InfrastructureServiceRegistration
     {
@@ -14,7 +13,7 @@ namespace Ecommerce.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
 
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings");
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
 
             return services;
