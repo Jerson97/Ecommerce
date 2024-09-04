@@ -1,3 +1,4 @@
+using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
@@ -38,6 +39,15 @@ public class ProductController : ControllerBase{
         var paginationProduct = await _mediator.Send(paginationProductsQuery);
 
         return Ok(paginationProduct);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{id}", Name = "GetProductById")]
+    [ProducesResponseType(typeof(ProductVm), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> GetProductById(int id)
+    {
+        var query = new GetProductByIdQuery(id);
+        return Ok(await _mediator.Send(query));
     }
 
 }
