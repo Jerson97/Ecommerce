@@ -32,14 +32,16 @@ namespace Ecommerce.Api.Middlewares
                 switch (ex)
                 {
                     case NotFoundException notFoundException:
-                        statusCode = (int)HttpStatusCode.BadRequest;
+                        statusCode = (int)HttpStatusCode.NotFound;
                         break;
 
                     case FluentValidation.ValidationException validationException:
                         statusCode = (int)HttpStatusCode.BadRequest;
                         var errors = validationException.Errors.Select(ers => ers.ErrorMessage).ToArray();
                         var validationJsons = JsonConvert.SerializeObject(errors);
-                        result = JsonConvert.SerializeObject(new CodeErrorException(statusCode, errors, validationJsons));
+                        result = JsonConvert.SerializeObject(
+                            new CodeErrorException(statusCode, errors, validationJsons)
+                        );
                         break;
 
                     case BadRequestException badRequestException:
@@ -50,14 +52,18 @@ namespace Ecommerce.Api.Middlewares
                         statusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
+
                 if (string.IsNullOrEmpty(result))
                 {
-                    result = JsonConvert.SerializeObject(new CodeErrorException(statusCode, new string[] { ex.Message }, ex.StackTrace));
+                    result = JsonConvert.SerializeObject(
+                        new CodeErrorException(statusCode,
+                                                new string[] { ex.Message }, ex.StackTrace));
                 }
 
                 context.Response.StatusCode = statusCode;
                 await context.Response.WriteAsync(result);
             }
+
         }
     }
 }

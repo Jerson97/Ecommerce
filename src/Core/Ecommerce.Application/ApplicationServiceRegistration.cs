@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Ecommerce.Application.Behaviors;
-using Ecommerce.Application.Behaviours;
 using Ecommerce.Application.Mappings;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +21,7 @@ namespace Ecommerce.Application
             services.AddSingleton(mapper);
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return services;
         }
     }

@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Ecommerce.Application.Behaviours
+namespace Ecommerce.Application.Behaviors
 {
-    public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class UnhandledExceptionBehavior<TRequest, TResponse>
+                            : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly ILogger<TRequest> _logger;
+
         public UnhandledExceptionBehavior(ILogger<TRequest> logger)
         {
             _logger = logger;
@@ -19,11 +21,14 @@ namespace Ecommerce.Application.Behaviours
             }
             catch (Exception ex)
             {
-
                 var requestName = typeof(TRequest).Name;
-                _logger.LogError(ex, "Application Request: Sucedio una exception para el request {Name} {@Request}", request);
+                _logger.LogError(ex, "Application Request: Sucedio una exception para el request {Name} {@Request}", requestName, request);
                 throw new Exception("Application Request con Errores");
             }
+
+
+
+
         }
     }
 }

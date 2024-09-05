@@ -19,34 +19,64 @@ namespace Ecommerce.Infrastructure.Services.Auth
             _httpContextAccessor = httpContextAccessor;
             _jwtSettings = jwtSettings.Value;
         }
-        public string CreateToken(User user, IList<string>? roles)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
-                new Claim("userId", user.Id),
-                new Claim("email", user.Email!),
+        //public string CreateToken(User user, IList<string>? roles)
+        //{
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
+        //        new Claim("userId", user.Id),
+        //        new Claim("email", user.Email!),
 
+        //    };
+
+        //    foreach(var rol in roles!)
+        //    {
+        //        var claim = new Claim(ClaimTypes.Role, rol);
+        //        claims.Add(claim);
+        //    }
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
+        //    var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        //    var tokenDescription = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(claims),
+        //        Expires = DateTime.UtcNow.Add(_jwtSettings.ExpireTime),
+        //        SigningCredentials = credenciales
+        //    };
+
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var token = tokenHandler.CreateToken(tokenDescription);
+        //    return tokenHandler.WriteToken(token);
+        //}
+        public string CreateToken(User user, List<string> roles)
+        {
+            var claims = new List<Claim>{
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
             };
 
-            foreach(var rol in roles!)
+            if (roles != null)
             {
-                var claim = new Claim(ClaimTypes.Role, rol);
-                claims.Add(claim);
+                foreach (var rol in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, rol));// Agregamos los roles como claim dentro del token
+                }
             }
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("EstaEsUnaClaveSuperSeguraYLoSuficientementeLargaParaHmacSha512QueTiene64Caracteres"));
+
             var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescription = new SecurityTokenDescriptor
+            var tokenDescripcion = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.Add(_jwtSettings.ExpireTime),
+                Expires = DateTime.Now.AddDays(30),
                 SigningCredentials = credenciales
             };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescription);
-            return tokenHandler.WriteToken(token);
+            var tokenManejador = new JwtSecurityTokenHandler();
+            var token = tokenManejador.CreateToken(tokenDescripcion);
+
+            return tokenManejador.WriteToken(token);
         }
 
         public string GetSessionUser()

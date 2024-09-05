@@ -6,37 +6,39 @@ namespace Ecommerce.Api.Errors
     {
         [JsonProperty(PropertyName = "statusCode")]
         public int StatusCode { get; set; }
+
         [JsonProperty(PropertyName = "message")]
         public string[]? Message { get; set; }
+
 
         public CodeErrorResponse(int statusCode, string[]? message = null)
         {
             StatusCode = statusCode;
-
-            if (message != null)
+            if (message is null)
             {
-
                 Message = new string[0];
-                var text = getDefaultMessageStatusCode(statusCode);
+                var text = GetDefaultMessageStatusCode(statusCode);
                 Message[0] = text;
             }
-            else {
-
+            else
+            {
                 Message = message;
             }
 
+
         }
 
-        private string getDefaultMessageStatusCode(int statusCode) {
-
+        private string GetDefaultMessageStatusCode(int statusCode)
+        {
             return statusCode switch
             {
                 400 => "El Request enviado tiene errores",
                 401 => "No tienes authorization para este recurso",
                 404 => "No se encontro el recurso solicitado",
-                500 => "Se produjieron errores en el servidor",
-                _ => string.Empty,
+                500 => "Se produjeron errores en el servidor",
+                _ => string.Empty
             };
+
         }
     }
 
