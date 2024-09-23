@@ -14,6 +14,5 @@ namespace Ecommerce.Application.Features.Auths.Users.Vms
         public string? Avatar { get; set; }
         public AddressVm? StreetAddress { get; set; }
         public ICollection<string>? Roles { get; set; }
-        public ICollection<string>? prueba { get; set; }
     }
 }

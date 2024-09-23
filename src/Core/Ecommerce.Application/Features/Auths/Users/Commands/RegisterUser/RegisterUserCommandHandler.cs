@@ -64,6 +64,7 @@ namespace Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser
                     Name = user.Name,
                     LastName = user.LastName,
                     Phone = user.Phone,
+                    Username = user.UserName,
                     Email = user.Email,
                     Avatar = user.AvatarUrl,
                     Token = _authService.CreateToken(user, rolesList),
