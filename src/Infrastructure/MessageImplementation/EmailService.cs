@@ -2,8 +2,8 @@
 using Ecommerce.Application.Models.Email;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using System.Net;
+using System.Net.Mail;
 
 namespace Ecommerce.Infrastructure.MessageImplementation
 {
@@ -22,24 +22,37 @@ namespace Ecommerce.Infrastructure.MessageImplementation
         {
             try
             {
-                var client = new SendGridClient(_emailSettings.Key);
-                var from = new EmailAddress(_emailSettings.Email);
-                var subject = email.Subject;
-                var to = new EmailAddress(email.To, email.To);
+                using (var client = new SmtpClient(_emailSettings.SmtpHost, _emailSettings.SmtpPort))
+                {
+                    client.Credentials = new NetworkCredential(_emailSettings.SmtpUser, _emailSettings.SmtpPass);
+                    client.EnableSsl = true;  // Si tu servidor requiere SSL
 
-                var plainTextContent = email.Body;
-                var htmlContent = $"{email.Body} { _emailSettings.BaseUrlClient}/ password / reset{token}";
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-                var response = await client.SendEmailAsync(msg);
+                    var from = new MailAddress(_emailSettings.Email!, _emailSettings.DisplayName);
+                    var to = new MailAddress(email.To!);
+                    var mailMessage = new MailMessage
+                    {
+                        From = from,
+                        Subject = email.Subject,
+                        Body = $"{email.Body} {_emailSettings.BaseUrlClient}/password/reset/{token}",
+                        IsBodyHtml = true
+                    };
+                    mailMessage.To.Add(to);
 
-                return response.IsSuccessStatusCode;
+                    await client.SendMailAsync(mailMessage);
+                    return true;
+                }
             }
-            catch (Exception)
+            catch (SmtpException smtpEx)
             {
-
-                _logger.LogError("El email no pudo enviarse, existen errores");
+                _logger.LogError(smtpEx, "Error SMTP: {Message}", smtpEx.Message);
                 return false;
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error general: {Message}", ex.Message);
+                return false;
+            }
+
         }
     }
 }
