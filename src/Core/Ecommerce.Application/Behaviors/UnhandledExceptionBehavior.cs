@@ -26,9 +26,6 @@ namespace Ecommerce.Application.Behaviors
                 throw new Exception("Application Request con Errores");
             }
 
-
-
-
         }
     }
 }

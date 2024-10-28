@@ -51,14 +51,14 @@ namespace Ecommerce.Infrastructure.Services.Auth
         public string CreateToken(User user, List<string> roles)
         {
             var claims = new List<Claim>{
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName!)
             };
 
             if (roles != null)
             {
                 foreach (var rol in roles)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, rol));// Agregamos los roles como claim dentro del token
+                    claims.Add(new Claim(ClaimTypes.Role, rol));
                 }
             }
 
@@ -81,7 +81,7 @@ namespace Ecommerce.Infrastructure.Services.Auth
 
         public string GetSessionUser()
         {
-            var username = _httpContextAccessor.HttpContext!.User.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var username = _httpContextAccessor.HttpContext!.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             return username!;
         }
     }
