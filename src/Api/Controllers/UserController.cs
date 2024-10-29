@@ -4,6 +4,7 @@ using Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPassword;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPasswordByToken;
 using Ecommerce.Application.Features.Auths.Users.Commands.SendPassword;
+using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminStatusUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateUser;
 using Ecommerce.Application.Features.Auths.Users.Vms;
@@ -99,8 +100,16 @@ namespace Ecommerce.Api.Controllers
 
         [Authorize(Roles = Role.ADMIN)]
         [HttpPut("updateadminuser", Name = "UpdateAdminUser")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<User>> UpdateAdminUser([FromBody] UpdateAdminUserCommand request)
+        {
+            return await _mediator.Send(request);
+        }
+
+        [Authorize(Roles = Role.ADMIN)]
+        [HttpPut("updateadminstatususer", Name = "UpdateAdminStatusUser")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<User>> UpdateAdminStatusUser([FromBody] UpdateAdminStatusUserCommand request)
         {
             return await _mediator.Send(request);
         }
