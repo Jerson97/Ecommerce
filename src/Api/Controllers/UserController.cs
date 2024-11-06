@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Auths.Roles.Queries.GetRoles;
 using Ecommerce.Application.Features.Auths.Users.Commands.LoginUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPassword;
@@ -152,6 +153,15 @@ namespace Ecommerce.Api.Controllers
         {
             var paginationUser = await _mediator.Send(paginationUsersQuery);
             return Ok(paginationUser);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("roles", Name = "GerRoleList")]
+        [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<List<string>>> GetRoleList()
+        {
+            var query = new GetRolesQuery();
+            return await _mediator.Send(query);
         }
 
     }
