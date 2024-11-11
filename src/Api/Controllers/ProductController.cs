@@ -1,8 +1,12 @@
+using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Shared.Queries;
+using Ecommerce.Application.Models.Authorization;
+using Ecommerce.Application.Models.ImageManagement;
 using Ecommerce.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,9 +20,11 @@ namespace Ecommerce.Api.Controllers;
 public class ProductController : ControllerBase{
 
     private IMediator _mediator;
-    public ProductController(IMediator mediator)
+    private IManageImageService _manageImageService;
+    public ProductController(IMediator mediator, IManageImageService manageImageService)
     {
         _mediator = mediator;
+        _manageImageService = manageImageService;
     }
 
     [AllowAnonymous]
@@ -48,6 +54,38 @@ public class ProductController : ControllerBase{
     {
         var query = new GetProductByIdQuery(id);
         return Ok(await _mediator.Send(query));
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPost("create", Name = "CreateProduct")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> CreateProduct([FromForm] CreateProductCommand request)
+    {
+        var listFotoUrls = new List<CreateProductImageCommand>();
+
+        if (request.Photo is not null)
+        {
+            foreach (var foto in request.Photo)
+            {
+                var resultImage = await _manageImageService.UploadImage(new ImageData
+                {
+                    ImageStream = foto.OpenReadStream(),
+                    Name = foto.Name
+                });
+
+                var fotoCommand = new CreateProductImageCommand
+                {
+                    PublicCode = resultImage.PublicId,
+                    Url = resultImage.Url
+                };
+
+                listFotoUrls.Add(fotoCommand);
+            }
+            request.ImageUrls = listFotoUrls;
+        }
+
+        return await _mediator.Send(request);
+
     }
 
 }

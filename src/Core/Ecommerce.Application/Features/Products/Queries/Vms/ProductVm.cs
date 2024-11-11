@@ -9,11 +9,11 @@ namespace Ecommerce.Application.Features.Products.Queries.Vms
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? Description { get; set; }
         public decimal Price { get; set; }
         public int Rating { get; set; }
         public string? Seller { get; set; }
         public int Stock { get; set; }
+        //public string? Description { get; set; }
         public virtual ICollection<ReviewVm>? Reviews { get; set; }
         public virtual ICollection<ImageVm>? Images { get; set; }
         public int CategoryId { get; set; }
