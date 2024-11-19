@@ -1,9 +1,11 @@
 using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.Commands.DeleteProduct;
 using Ecommerce.Application.Features.Products.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
+using Ecommerce.Application.Features.Products.UpdateProduct;
 using Ecommerce.Application.Features.Shared.Queries;
 using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Models.ImageManagement;
@@ -86,6 +88,47 @@ public class ProductController : ControllerBase{
 
         return await _mediator.Send(request);
 
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPut("update", Name = "UpdateProduct")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> UpdateProduct([FromForm] UpdateProductCommand request)
+    {
+        var listFotoUrls = new List<CreateProductImageCommand>();
+
+        if (request.Photos is not null)
+        {
+            foreach (var foto in request.Photos)
+            {
+                var resultImage = await _manageImageService.UploadImage(new ImageData
+                {
+                    ImageStream = foto.OpenReadStream(),
+                    Name = foto.Name
+                });
+
+                var fotoCommand = new CreateProductImageCommand
+                {
+                    PublicCode = resultImage.PublicId,
+                    Url = resultImage.Url
+                };
+
+                listFotoUrls.Add(fotoCommand);
+            }
+            request.ImageUrls = listFotoUrls;
+        }
+
+        return await _mediator.Send(request);
+
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpDelete("status/{id}", Name = "UpdateStatusProduct")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> UpdateStatusProduct(int id)
+    {
+        var request = new DeleteProductCommand(id);
+        return await _mediator.Send(request);
     }
 
 }

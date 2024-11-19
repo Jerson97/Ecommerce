@@ -4,6 +4,7 @@ using Ecommerce.Application.Features.Countries.Vms;
 using Ecommerce.Application.Features.Images.Queries.Vms;
 using Ecommerce.Application.Features.Products.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.Vms;
+using Ecommerce.Application.Features.Products.UpdateProduct;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
 using Ecommerce.Domain;
 
@@ -23,6 +24,7 @@ namespace Ecommerce.Application.Mappings
             CreateMap<Category, CategoryVm>();
             CreateMap<CreateProductCommand, Product>();
             CreateMap<CreateProductImageCommand, Image>();
+            CreateMap<UpdateProductCommand, Product>();
         }
     }
 }
