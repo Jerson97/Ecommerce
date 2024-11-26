@@ -6,6 +6,7 @@ using Ecommerce.Application.Features.Products.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Products.UpdateProduct;
 using Ecommerce.Application.Features.Reviews.Queries.Vms;
+using Ecommerce.Application.Features.ShoppingCarts.Vms;
 using Ecommerce.Domain;
 
 namespace Ecommerce.Application.Mappings
@@ -25,6 +26,10 @@ namespace Ecommerce.Application.Mappings
             CreateMap<CreateProductCommand, Product>();
             CreateMap<CreateProductImageCommand, Image>();
             CreateMap<UpdateProductCommand, Product>();
+
+            CreateMap<ShoppingCart, ShoppingCartVm>()
+                .ForMember(p => p.ShoppingCartId, x => x.MapFrom(a => a.ShoppingCartMasterId));
+            CreateMap<ShoppingCartItem, ShoppingCartItemVm>();
         }
     }
 }
