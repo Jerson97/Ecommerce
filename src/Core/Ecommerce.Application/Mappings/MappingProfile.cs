@@ -3,6 +3,7 @@ using Ecommerce.Application.Features.Addresses.Vms;
 using Ecommerce.Application.Features.Categories.Vms;
 using Ecommerce.Application.Features.Countries.Vms;
 using Ecommerce.Application.Features.Images.Queries.Vms;
+using Ecommerce.Application.Features.Orders.Vms;
 using Ecommerce.Application.Features.Products.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Products.UpdateProduct;
@@ -35,6 +36,10 @@ namespace Ecommerce.Application.Mappings
             CreateMap<ShoppingCartItemVm, ShoppingCartItem>();
 
             CreateMap<Address, AddressVm>();
+
+            CreateMap<Order, OrderVm>();
+            CreateMap<OrderItem, OrderItemVm>();
+            CreateMap<OrderAddres, AddressVm>();
         }
     }
 }
