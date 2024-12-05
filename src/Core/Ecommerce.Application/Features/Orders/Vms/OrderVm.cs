@@ -11,7 +11,7 @@ namespace Ecommerce.Application.Features.Orders.Vms
     public class OrderVm
     {
         public int Id { get; set; }
-        public AddressVm? OrderAddress { get; set; }
+        public AddressVm? OrderAddres { get; set; }
         public List<OrderItemVm?>? OrderItems { get; set; }
         public decimal SubTotal { get; set; }
         public decimal Tax { get; set; }
@@ -22,8 +22,8 @@ namespace Ecommerce.Application.Features.Orders.Vms
         public string? PaymentIntentId { get; set; }
         public string? ClientSecret { get; set; }
         public string? StripeApiKey { get; set; }
-        public string? UserBuyer { get; set; }
-        public string? NameBuyer { get; set; }
+        public string? BuyerUsername { get; set; }
+        public string? BuyerName { get; set; }
 
         public int Quantity
         {
